@@ -4,7 +4,6 @@ class TasksController < ApplicationController
   
   def show
     @task = Task.find(params[:id])
-    @tasks = current_user.tasks.order('created_at DESC').page(params[:page])
   end
   
   def create
@@ -44,7 +43,7 @@ class TasksController < ApplicationController
   end
 
   private
-
+  
   def task_params
     params.require(:task).permit(:content)
   end
