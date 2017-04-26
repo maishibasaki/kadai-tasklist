@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
   before_action :require_user_logged_in
-  before_action :correct_user, only: [:create, :edit, :update, :destroy]
+  before_action :correct_user, only: [:edit, :update, :destroy]
   
   def show
     @task = Task.find(params[:id])
@@ -39,7 +39,6 @@ class TasksController < ApplicationController
     @task.destroy
     flash[:success] = 'タスクを削除しました。'
     redirect_to root_path
-  
   end
 
   private
