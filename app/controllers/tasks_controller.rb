@@ -1,13 +1,15 @@
 class TasksController < ApplicationController
   before_action :require_user_logged_in
   before_action :correct_user, only: [:destroy]
-
-  def new
-    @task = Task.new
+  
+  def show
+    @task = current_user.tasks.find_by(params[:id])
+    @tasks = current_user.tasks.order('created_at DESC').page(params[:page])
   end
   
   def create
     @task = current_user.tasks.build(task_params)
+    
     if @task.save
       flash[:success] = 'タスクを投稿しました。'
       redirect_to root_url
@@ -17,11 +19,27 @@ class TasksController < ApplicationController
       render 'toppages/index'
     end
   end
-
+  
+  def edit
+    @task = current_user.tasks.find_by(params[:id])
+  end
+  
+  def update
+    @task = current_user.tasks.find(params[:id])
+    
+    if @task.update(task_params)
+      flash[:success] = 'タスクは正常に更新されました。'
+      redirect_to @task
+    else
+      flash.now[:danger] = 'タスクは更新されませんでした。'
+      render :edit
+    end
+  end
+  
   def destroy
     @task.destroy
     flash[:success] = 'タスクを削除しました。'
-    redirect_back(fallback_location: root_path)
+    redirect_back(fallback_location: @task)
   end
 
   private
