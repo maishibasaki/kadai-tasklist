@@ -3,7 +3,7 @@ class TasksController < ApplicationController
   before_action :correct_user, only: [:destroy]
   
   def show
-    @task = current_user.tasks.find_by(params[:id])
+    @task = Task.find(params[:id])
     @tasks = current_user.tasks.order('created_at DESC').page(params[:page])
   end
   
@@ -21,7 +21,7 @@ class TasksController < ApplicationController
   end
   
   def edit
-    @task = current_user.tasks.find_by(params[:id])
+    @task = current_user.tasks.find_by(id: params[:id])
   end
   
   def update
@@ -39,7 +39,8 @@ class TasksController < ApplicationController
   def destroy
     @task.destroy
     flash[:success] = 'タスクを削除しました。'
-    redirect_back(fallback_location: @task)
+    redirect_to root_path
+  
   end
 
   private
@@ -51,7 +52,7 @@ class TasksController < ApplicationController
   def correct_user
     @task = current_user.tasks.find_by(id: params[:id])
     unless @task
-      redirect_to root_path
+      redirect_to root_url
     end
   end
 end
